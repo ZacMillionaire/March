@@ -12,6 +12,17 @@ namespace March {
 
 		public YouTubeSearch(ChatMessage message, GroupCollection commandArgs){
 
+			if (Program.YoutubeAPIKey == ""){
+				//TODO: clean this up
+				Program.SendIRCMessage(
+					string.Format(
+						"PRIVMSG {0} :" + ( (char)3 + "00,04" ) + " Youtube " + (char)3 + " No API key set! Unable to search.",
+						message.Channel
+					)
+				);
+				return;
+			}
+
 			string searchTerm = commandArgs[2].ToString().Trim();
 
 			if (searchTerm == ""){

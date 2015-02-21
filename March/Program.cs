@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
@@ -8,14 +9,15 @@ namespace March {
 	class Program {
 
 		//TODO: Move this stuff to a config file
-		public const string YoutubeAPIKey = null;
-		public const string BotOwner = "ScotchDrinker";
 
-		private const string Server = "irc.freenode.org";
-		private const int Port = 6667;
-		private const string BotNick = null;
-		private const string BotPassword = null;
-		private const string IrcChannel = "#qutcode";
+		public static string YoutubeAPIKey = ConfigurationManager.AppSettings["YoutubeAPIKey"];
+		public static string BotOwner = ConfigurationManager.AppSettings["BotOwner"];
+
+		private static string Server = ConfigurationManager.AppSettings["Server"];
+		private static int Port = int.Parse(ConfigurationManager.AppSettings["Port"]);
+		private static string BotNick = ConfigurationManager.AppSettings["BotNick"];
+		private static string BotPassword = ConfigurationManager.AppSettings["BotPassword"];
+		private static string IrcChannel = ConfigurationManager.AppSettings["IrcChannel"];
 
 		private static TcpClient _irc;
 		private static NetworkStream _ircStream;
@@ -136,7 +138,7 @@ namespace March {
 		/// <summary>
 		/// Invoked Method.
 		/// 
-		/// Quits the connected IRC Server.
+		/// QUITs the connected IRC Server.
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="commandArgs"></param>
@@ -146,6 +148,27 @@ namespace March {
 				SendIRCMessage("QUIT :http://i.imgur.com/OpFcp.jpg");
 			} // End if
 		} // End QuitIRCServer
+
+
+		/// <summary>
+		/// Invoked Method.
+		/// 
+		/// PARTs a given channel 
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="commandArgs"></param>
+		public static void PartIRCChannel(ChatMessage message, GroupCollection commandArgs) {
+
+			if(message.Username == BotOwner) {
+				// TODO: clean this up
+				SendIRCMessage(
+					string.Format(
+						"PART {0} :You're just jealous",
+						message.Channel
+						)
+					);
+			} // End if
+		} // End PartIRCChannel
 
 
 	} // End class Program
